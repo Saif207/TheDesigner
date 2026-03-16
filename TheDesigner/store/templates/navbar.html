@@ -17,12 +17,17 @@
                 {% endif %}
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Category</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">All Products</a></li>
+                        <li><a class="dropdown-item" href="{% url 'home' %}">All Products</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'keyboards' %}">Keyboards</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'switches' %}">Switches</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'keycaps' %}">Keycaps</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'wires' %}">Wires</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'pcb' %}">PCB</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'frames' %}">Frames</a></li>
 
                     </ul>
                 </li>
