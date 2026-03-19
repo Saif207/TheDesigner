@@ -1,4 +1,3 @@
-<!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="{% url 'home' %}">TheDesigner</a>
@@ -20,7 +19,7 @@
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Category</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'home' %}">All Products</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category_summary' %}">All Products</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'keyboards' %}">Keyboards</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'switches' %}">Switches</a></li>
@@ -28,7 +27,6 @@
                         <li><a class="dropdown-item" href="{% url 'category' 'wires' %}">Wires</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'pcb' %}">PCB</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'frames' %}">Frames</a></li>
-
                     </ul>
                 </li>
             </ul>
@@ -36,7 +34,7 @@
                 <a href="{% url 'cart_summary' %}" class="btn btn-outline-dark">
                     <i class="bi-cart-fill me-1"></i>
                     Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart | length }}</span>
                 </a>
             </form>
         </div>
