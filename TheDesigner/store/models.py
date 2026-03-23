@@ -1,5 +1,38 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+
+# Kuwait governorates
+GOVERNORATES = [
+    ('capital', 'Capital (العاصمة)'),
+    ('hawalli', 'Hawalli (حولي)'),
+    ('farwaniya', 'Farwaniya (الفروانية)'),
+    ('ahmadi', 'Ahmadi (الأحمدي)'),
+    ('jahra', 'Jahra (الجهراء)'),
+    ('mubarak', 'Mubarak Al-Kabeer (مبارك الكبير)'),
+]
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    date_modified = models.DateTimeField(auto_now=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address1 = models.CharField(max_length=200, blank=True, verbose_name="Block & Street")
+    address2 = models.CharField(max_length=200, blank=True, verbose_name="House/Apartment")
+    governorate = models.CharField(max_length=20, choices=GOVERNORATES, blank=True, verbose_name="Governorate")
+    area = models.CharField(max_length=100, blank=True, verbose_name="Area (e.g. Salmiya)")
+    country = models.CharField(max_length=100, blank=True, default="Kuwait")
+
+    def __str__(self):
+        return self.user.username
+
+# Automatically create a profile when a new user signs up
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        user_profile = Profile(user=instance)
+        user_profile.save()
+
+post_save.connect(create_profile, sender=User)
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
