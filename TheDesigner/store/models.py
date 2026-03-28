@@ -22,7 +22,8 @@ class Profile(models.Model):
     governorate = models.CharField(max_length=20, choices=GOVERNORATES, blank=True, verbose_name="Governorate")
     area = models.CharField(max_length=100, blank=True, verbose_name="Area (e.g. Salmiya)")
     country = models.CharField(max_length=100, blank=True, default="Kuwait")
-
+    old_cart = models.CharField(max_length=200, blank=True, null= True)
+    
     def __str__(self):
         return self.user.username
 
