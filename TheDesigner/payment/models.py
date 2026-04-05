@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from store.models import Product
+from store.models import Product, Profile
+from django.db.models.signals import post_save
 
 GOVERNORATES = [
     ('capital', 'Capital (العاصمة)'),
@@ -28,7 +29,14 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return f'Shipping Address - {str(self.id)}'
-    
+#Create shipping address by default user signs up
+def create_shipping(sender, instance, created, **kwargs):
+    if created:
+        user_shipping = ShippingAddress(user=instance)
+        user_shipping.save()
+
+post_save.connect(create_shipping, sender=User)
+
 #Create Order Model
 class Order(models.Model):
     #Foreign Key

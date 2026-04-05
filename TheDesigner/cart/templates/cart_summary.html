@@ -84,7 +84,10 @@
                         </section>
 
                     {% endfor %}
-                    <h3> Total: ${{ totals }} </h3>
+                    <div align="right">
+                        <h3> Total: ${{ totals }} </h3>
+                        <a href="{% url 'checkout' %}" class="btn btn-success">Check Out</a>
+                    </div>
                 {% else %}
                 <br/><br/><br/><br/><br/>
                 There is Nothing in Your Cart...
