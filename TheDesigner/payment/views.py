@@ -4,6 +4,7 @@ from payment.forms import ShippingForm,PaymentForm
 from payment.models import ShippingAddress,Order,OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
+from store.models import Product
 
 def billing_info(request):
     if request.POST:
@@ -40,7 +41,7 @@ def checkout(request):
     if request.user.is_authenticated:
         #Checking as logged in user
         #Shipping User
-        shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
+        shipping_user, created = ShippingAddress.objects.get_or_create(user=request.user)
         #Shipping Form
         shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
         return render(request, "payment/checkout.html", {"cart_products":cart_products,"quantities":quantities,"totals":totals, "shipping_form":shipping_form})
@@ -62,7 +63,6 @@ def process_order(request):
         #Get Shipping session Data
         my_shipping = request.session.get('my_shipping')
 
-
         #Gather Order Info
         full_name = my_shipping['shipping_full_name']
         email = my_shipping['shipping_email']
@@ -77,16 +77,51 @@ def process_order(request):
             #Create Order
             create_order = Order(user=user, full_name=full_name, email=email, phone=phone, shipping_address=shipping_address, amount_paid=amount_paid)
             create_order.save()
-            messages.success(request,"Order Placed Successfully")
-            return redirect ("home")
+
+            #Add Order Items
+            order_id = create_order.pk
+            for product in cart_products:
+                product_id = product.id
+                #Get product price
+                if product.is_sale:
+                    price = product.sale_Price
+                else:
+                    price = product.price
+
+                #Get quantity
+                for key, value in quantities.items():
+                    if int(key) == product.id:
+                        create_order_item = OrderItem(order_id=order_id, product=product, user=user, quantity=value, price=price)
+                        create_order_item.save()
+
+            messages.success(request, "Order Placed Successfully")
+            return redirect("home")
+
         else:
             #Not Logged In
             #Create Order
             create_order = Order(full_name=full_name, email=email, phone=phone, shipping_address=shipping_address, amount_paid=amount_paid)
             create_order.save()
-            messages.success(request,"Order Placed Successfully")
-            return redirect ("home")
+
+            #Add Order Items
+            order_id = create_order.pk
+            for product in cart_products:
+                product_id = product.id
+                #Get product price
+                if product.is_sale:
+                    price = product.sale_Price
+                else:
+                    price = product.price
+
+                #Get quantity
+                for key, value in quantities.items():
+                    if int(key) == product.id:
+                        create_order_item = OrderItem(order_id=order_id, product=product, quantity=value, price=price)
+                        create_order_item.save()
+
+            messages.success(request, "Order Placed Successfully")
+            return redirect("home")
 
     else:
-        messages.success(request,"Access Denied")
-        return redirect ("home")
+        messages.success(request, "Access Denied")
+        return redirect("home")
