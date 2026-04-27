@@ -93,6 +93,11 @@ def process_order(request):
                     if int(key) == product.id:
                         create_order_item = OrderItem(order_id=order_id, product=product, user=user, quantity=value, price=price)
                         create_order_item.save()
+            #Delete Cart
+            for key in list(request.session.keys()):
+                if key == "session_key":
+                    #Delete the key
+                    del request.session[key]
 
             messages.success(request, "Order Placed Successfully")
             return redirect("home")
@@ -118,6 +123,12 @@ def process_order(request):
                     if int(key) == product.id:
                         create_order_item = OrderItem(order_id=order_id, product=product, quantity=value, price=price)
                         create_order_item.save()
+            #Delete Cart
+            for key in list(request.session.keys()):
+                if key == "session_key":
+                    #Delete the key
+                    del request.session[key]
+
 
             messages.success(request, "Order Placed Successfully")
             return redirect("home")
